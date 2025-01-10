@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+    <!-- Gradient definitions -->
+    <defs>
+        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#f8f9fa;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#e9ecef;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#228be6;stop-opacity:0.2" />
+            <stop offset="100%" style="stop-color:#228be6;stop-opacity:0" />
+        </linearGradient>
+    </defs>
+
+    <!-- Background with gradient -->
+    <rect width="800" height="400" fill="url(#bgGradient)"/>
+    
+    <!-- Grid lines with vector pattern -->
+    <g stroke="#dee2e6" stroke-width="0.5">
+        <path d="M50 50 H750" />
+        <path d="M50 150 H750" />
+        <path d="M50 250 H750" />
+        <path d="M50 350 H750" />
+        <path d="M50 50 V350" />
+        <path d="M190 50 V350" />
+        <path d="M330 50 V350" />
+        <path d="M470 50 V350" />
+        <path d="M610 50 V350" />
+        <path d="M750 50 V350" />
+    </g>
+
+    <!-- Area under actual price -->
+    <path d="M50,300 L190,250 L330,180 L470,220 L610,150 L750,100 L750,350 L50,350 Z" 
+          fill="url(#areaGradient)"/>
+
+    <!-- Actual price line with vector curve -->
+    <path d="M50,300 C120,280 160,250 190,250 C220,250 300,180 330,180 C360,180 440,220 470,220 C500,220 580,150 610,150 C640,150 720,100 750,100" 
+          fill="none" 
+          stroke="#228be6" 
+          stroke-width="3"/>
+
+    <!-- Predicted price line with vector curve -->
+    <path d="M50,290 C120,270 160,240 190,240 C220,240 300,170 330,170 C360,170 440,200 470,200 C500,200 580,140 610,140 C640,140 720,120 750,120" 
+          fill="none" 
+          stroke="#40c057" 
+          stroke-width="3"
+          stroke-dasharray="5,5"/>
+
+    <!-- Vector-based data points -->
+    <g fill="#228be6">
+        <circle cx="50" cy="300" r="4"/>
+        <circle cx="190" cy="250" r="4"/>
+        <circle cx="330" cy="180" r="4"/>
+        <circle cx="470" cy="220" r="4"/>
+        <circle cx="610" cy="150" r="4"/>
+        <circle cx="750" cy="100" r="4"/>
+    </g>
+
+    <!-- Axes labels with vector text -->
+    <g font-family="Arial" font-size="12" fill="#495057">
+        <text x="30" y="50" text-anchor="end">$200</text>
+        <text x="30" y="150" text-anchor="end">$150</text>
+        <text x="30" y="250" text-anchor="end">$100</text>
+        <text x="30" y="350" text-anchor="end">$50</text>
+        
+        <text x="50" y="370" text-anchor="middle">Jan</text>
+        <text x="190" y="370" text-anchor="middle">Feb</text>
+        <text x="330" y="370" text-anchor="middle">Mar</text>
+        <text x="470" y="370" text-anchor="middle">Apr</text>
+        <text x="610" y="370" text-anchor="middle">May</text>
+        <text x="750" y="370" text-anchor="middle">Jun</text>
+    </g>
+
+    <!-- Vector-based legend -->
+    <g transform="translate(550,20)">
+        <rect width="180" height="60" fill="white" stroke="#dee2e6" rx="4"/>
+        <line x1="20" y1="20" x2="60" y2="20" stroke="#228be6" stroke-width="3"/>
+        <text x="70" y="25" fill="#495057">Actual Price</text>
+        <line x1="20" y1="40" x2="60" y2="40" stroke="#40c057" stroke-width="3" stroke-dasharray="5,5"/>
+        <text x="70" y="45" fill="#495057">Predicted Price</text>
+    </g>
+
+    <!-- Vector title -->
+    <text x="400" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#212529">Stock Price Prediction Using ML</text>
+</svg>
