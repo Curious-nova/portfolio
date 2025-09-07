@@ -1,33 +1,38 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { ArrowDown, Code, Brain, Sparkles } from "lucide-react"
+import { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowDown, Code, Brain, Sparkles } from "lucide-react";
 
 export function HeroSection() {
-  const heroRef = useRef<HTMLElement>(null)
-  const titleRef = useRef<HTMLHeadingElement>(null)
-  const subtitleRef = useRef<HTMLParagraphElement>(null)
-  const ctaRef = useRef<HTMLDivElement>(null)
-  const floatingElementsRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLElement | null>(null);
+  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const subtitleRef = useRef<HTMLParagraphElement | null>(null);
+  const ctaRef = useRef<HTMLDivElement | null>(null);
+  const floatingElementsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const initHeroAnimations = () => {
-      if (typeof window !== "undefined" && window.gsap) {
-        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      // Use a safe any cast for window extensions to satisfy TypeScript
+      const w = window as any;
 
-        const tl = window.gsap.timeline()
+      if (w.gsap) {
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        const tl = w.gsap.timeline();
 
         // Initial state - hide all elements
-        window.gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
+        w.gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
           opacity: 0,
           y: prefersReducedMotion ? 0 : 30,
-        })
+        });
 
-        window.gsap.set(floatingElementsRef.current?.children || [], {
+        w.gsap.set(floatingElementsRef.current?.children || [], {
           opacity: 0,
           scale: prefersReducedMotion ? 1 : 0.8,
-        })
+        });
 
         // Animate in sequence with reduced motion support
         tl.to(titleRef.current, {
@@ -44,7 +49,7 @@ export function HeroSection() {
               duration: prefersReducedMotion ? 0.3 : 0.8,
               ease: "power2.out",
             },
-            prefersReducedMotion ? "-=0.1" : "-=0.6",
+            prefersReducedMotion ? "-=0.1" : "-=0.6"
           )
           .to(
             ctaRef.current,
@@ -54,7 +59,7 @@ export function HeroSection() {
               duration: prefersReducedMotion ? 0.3 : 0.6,
               ease: "power2.out",
             },
-            prefersReducedMotion ? "-=0.1" : "-=0.4",
+            prefersReducedMotion ? "-=0.1" : "-=0.4"
           )
           .to(
             floatingElementsRef.current?.children || [],
@@ -65,55 +70,63 @@ export function HeroSection() {
               ease: "power2.out",
               stagger: prefersReducedMotion ? 0.05 : 0.1,
             },
-            prefersReducedMotion ? "-=0.1" : "-=0.3",
-          )
+            prefersReducedMotion ? "-=0.1" : "-=0.3"
+          );
 
         if (!prefersReducedMotion) {
           // Only gentle floating animation for decorative elements
-          window.gsap.to(floatingElementsRef.current?.children || [], {
+          w.gsap.to(floatingElementsRef.current?.children || [], {
             y: -10,
             duration: 4,
             ease: "power1.inOut",
             yoyo: true,
             repeat: -1,
             stagger: 0.8,
-          })
+          });
         }
       }
+    };
+
+    // If GSAP/ScrollTrigger are loaded already, initialize; otherwise poll until available
+    const w = window as any;
+    if (w.gsap && w.ScrollTrigger) {
+      initHeroAnimations();
+      return;
     }
 
-    // Check if GSAP is loaded
-    if (window.gsap && window.ScrollTrigger) {
-      initHeroAnimations()
-    } else {
-      const checkGSAP = setInterval(() => {
-        if (window.gsap && window.ScrollTrigger) {
-          clearInterval(checkGSAP)
-          initHeroAnimations()
-        }
-      }, 100)
+    const checkGSAP = setInterval(() => {
+      const ww = window as any;
+      if (ww.gsap && ww.ScrollTrigger) {
+        clearInterval(checkGSAP);
+        initHeroAnimations();
+      }
+    }, 100);
 
-      return () => clearInterval(checkGSAP)
-    }
-  }, [])
+    return () => clearInterval(checkGSAP);
+  }, []);
 
   const scrollToAbout = () => {
-    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })
-  }
+    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <section
       id="home"
       ref={heroRef}
       className="relative w-full h-screen pt-30 flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-muted/20"
+      aria-label="Hero"
     >
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
+      <div className="absolute inset-0 opacity-5" aria-hidden>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(37,99,235,0.1),transparent_50%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_49%,rgba(37,99,235,0.03)_50%,transparent_51%)] bg-[length:20px_20px]" />
       </div>
 
-      <div ref={floatingElementsRef} className="absolute inset-0 pointer-events-none">
+      <div
+        ref={floatingElementsRef}
+        className="absolute inset-0 pointer-events-none"
+        aria-hidden
+      >
         <div className="absolute top-[20%] left-[5%] sm:left-[8%] w-12 sm:w-16 h-12 sm:h-16 rounded-full bg-primary/10 flex items-center justify-center">
           <Code className="w-6 sm:w-8 h-6 sm:h-8 text-primary" />
         </div>
@@ -133,7 +146,7 @@ export function HeroSection() {
             ref={titleRef}
             className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] sm:leading-tight"
           >
-            <span className="block text-foreground mb-2">Hey, I'm</span>
+            <span className="block text-foreground mb-2">Hey, {`I'm`}</span>
             <span className="block bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent mb-2">
               Jayesh Belsare
             </span>
@@ -144,15 +157,23 @@ export function HeroSection() {
             ref={subtitleRef}
             className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed px-2 sm:px-4"
           >
-            Full Stack Developer with a passion for AI, merging technical expertise with creative innovation to build
-            the future of digital experiences.
+            Full Stack Developer with a passion for AI, merging technical
+            expertise with creative innovation to build the future of digital
+            experiences.
           </p>
 
-          <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-4">
+          <div
+            ref={ctaRef}
+            className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-4"
+          >
             <Button
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg w-full sm:w-auto min-w-[200px] min-h-[56px]"
-              onClick={() => document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document
+                  .getElementById("portfolio")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
             >
               View My Work
             </Button>
@@ -160,7 +181,11 @@ export function HeroSection() {
               variant="outline"
               size="lg"
               className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 bg-transparent w-full sm:w-auto min-w-[200px] min-h-[56px]"
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document
+                  .getElementById("contact")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
             >
               Get In Touch
             </Button>
@@ -185,5 +210,5 @@ export function HeroSection() {
       {/* Gradient Overlay */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
     </section>
-  )
+  );
 }

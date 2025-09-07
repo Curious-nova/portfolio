@@ -1,18 +1,27 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Code2, Brain, Cloud, Server, GitBranch, Terminal, Database } from "lucide-react"
+import { useEffect, useRef } from "react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Code2,
+  Brain,
+  Cloud,
+  Server,
+  GitBranch,
+  Terminal,
+  Database,
+} from "lucide-react";
+import type React from "react";
 
 interface SkillCategory {
-  id: string
-  title: string
-  icon: any
-  color: string
-  bgColor: string
-  textColor: string
-  tools: string[]
+  id: string;
+  title: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  color: string;
+  bgColor: string;
+  textColor: string;
+  tools: string[];
 }
 
 const skillCategories: SkillCategory[] = [
@@ -30,7 +39,7 @@ const skillCategories: SkillCategory[] = [
       "JavaScript",
       "HTML5",
       "CSS3",
-      "Tailwind CSS"
+      "Tailwind CSS",
     ],
   },
   {
@@ -49,7 +58,7 @@ const skillCategories: SkillCategory[] = [
     color: "accent",
     bgColor: "bg-blue-500/10",
     textColor: "text-blue-600",
-    tools: ["JavaScript","C/C++", "Python", "Java", "Bash"],
+    tools: ["JavaScript", "C/C++", "Python", "Java", "Bash"],
   },
   {
     id: "database",
@@ -85,25 +94,22 @@ const skillCategories: SkillCategory[] = [
     color: "muted-foreground",
     bgColor: "bg-indigo-500/10",
     textColor: "text-indigo-600",
-    tools: [
-      "Git/GitHub",
-      "VS Code",
-      "Figma",
-      "Postman",
-      "Notion",
-    ],
+    tools: ["Git/GitHub", "VS Code", "Figma", "Postman", "Notion"],
   },
-]
+];
 
 export function SkillsSection() {
-  const sectionRef = useRef<HTMLElement>(null)
+  const sectionRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const initAnimations = () => {
-      if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
-        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      const w = window as any;
+      if (w.gsap && w.ScrollTrigger) {
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
 
-        window.gsap.fromTo(
+        w.gsap.fromTo(
           ".skill-category-card",
           {
             opacity: 0,
@@ -121,10 +127,10 @@ export function SkillsSection() {
               end: "bottom 30%",
               toggleActions: "play none none reverse",
             },
-          },
-        )
+          }
+        );
 
-        window.gsap.fromTo(
+        w.gsap.fromTo(
           ".tool-badge",
           {
             opacity: 0,
@@ -141,38 +147,48 @@ export function SkillsSection() {
               start: "top 60%",
               toggleActions: "play none none reverse",
             },
-          },
-        )
+          }
+        );
       }
+    };
+
+    const w = window as any;
+    if (w.gsap && w.ScrollTrigger) {
+      initAnimations();
+      return;
     }
 
-    if (window.gsap && window.ScrollTrigger) {
-      initAnimations()
-    } else {
-      const checkGSAP = setInterval(() => {
-        if (window.gsap && window.ScrollTrigger) {
-          clearInterval(checkGSAP)
-          initAnimations()
-        }
-      }, 100)
+    const checkGSAP = setInterval(() => {
+      const ww = window as any;
+      if (ww.gsap && ww.ScrollTrigger) {
+        clearInterval(checkGSAP);
+        initAnimations();
+      }
+    }, 100);
 
-      return () => clearInterval(checkGSAP)
-    }
-  }, [])
+    return () => clearInterval(checkGSAP);
+  }, []);
 
   return (
-    <section id="skills" ref={sectionRef} className="py-20 lg:py-32 bg-background animate-on-scroll">
+    <section
+      id="skills"
+      ref={sectionRef}
+      className="py-20 lg:py-32 bg-background animate-on-scroll"
+      aria-label="Skills and expertise"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">Skills & Expertise</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+            Skills & Expertise
+          </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-           Tools I use for my Full stack and AI journey
+            Tools I use for my Full stack and AI journey
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
           {skillCategories.map((category) => {
-            const Icon = category.icon
+            const Icon = category.icon;
             return (
               <Card
                 key={category.id}
@@ -181,10 +197,13 @@ export function SkillsSection() {
                 <div className="flex items-center space-x-3 mb-6">
                   <div
                     className={`w-12 h-12 ${category.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}
+                    aria-hidden
                   >
                     <Icon className={`w-6 h-6 ${category.textColor}`} />
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground">{category.title}</h3>
+                  <h3 className="text-xl font-semibold text-foreground">
+                    {category.title}
+                  </h3>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -193,16 +212,17 @@ export function SkillsSection() {
                       key={tool}
                       variant="outline"
                       className="tool-badge px-3 py-1.5 text-sm hover:bg-primary hover:text-primary-foreground transition-colors duration-300 cursor-default"
+                      aria-label={tool}
                     >
                       {tool}
                     </Badge>
                   ))}
                 </div>
               </Card>
-            )
+            );
           })}
         </div>
       </div>
     </section>
-  )
+  );
 }
